@@ -497,10 +497,6 @@ class SEB(object):
 
 
 
-
-
-
-
 # === SET PATH ===
 
 
@@ -517,9 +513,9 @@ metaf = path.join(dir_var, metaf)
 
 # === RUN SEB ===
 # metaf:meta path, site:site name
-test = SEB(metaf, site = 1)
-# df = test.SEB_RTS0()
-# df.to_csv(path.join(dir_mod, 'SEB_CH04_psy_CG_ori.csv'), index = False)
+test = SEB(metaf, site = 3)
+df = test.SEB_RTS0()
+df.to_csv(path.join(dir_mod, 'SEB_psy_CG_ori.csv'), index = False)
 
 
 
@@ -529,36 +525,36 @@ test = SEB(metaf, site = 1)
 # plt.plot(test.foc.snd[:365]*100)
 
 
-# df_quad = pd.read_csv(path.join(dir_mod, 'SEB_CHO4_psy_CG_quad.csv'))
-# df_quad['date'] = pd.to_datetime(df_quad['date'])
-# mask = df_quad['date'] >= pd.to_datetime('20000101')
-# mask *= (df_quad['date'] <= pd.to_datetime('20001231'))
-# df_quad = df_quad[mask]
+df_quad = pd.read_csv(path.join(dir_mod, 'SEB_psy_CG_quad.csv'))
+df_quad['date'] = pd.to_datetime(df_quad['date'])
+mask = df_quad['date'] >= pd.to_datetime('20000101')
+mask *= (df_quad['date'] <= pd.to_datetime('20001231'))
+df_quad = df_quad[mask]
 
 
-# df_ori = pd.read_csv(path.join(dir_mod, 'SEB_CHO4_psy_CG_ori.csv'))
-# df_ori['date'] = pd.to_datetime(df_ori['date'])
-# df_ori = df_ori[mask]
+df_ori = pd.read_csv(path.join(dir_mod, 'SEB_psy_CG_ori.csv'))
+df_ori['date'] = pd.to_datetime(df_ori['date'])
+df_ori = df_ori[mask]
 
-# # df_cg = pd.read_csv(path.join(dir_mod, 'SEB_CH04_CryoGrid.csv'))
-# # df_cg['date'] = pd.date_range('20001001', '20011001', freq='3H')[:-1]
-# # df_cg = pd.DataFrame(df_cg).set_index('date')
-# # df_cg = df_cg.resample('D').mean()
-
-
-# # plt.plot(df_cg.index, df_cg.QE, 'r', lw = 0.5)
-# plt.plot(df_quad.date, df_quad.QE, 'k', lw = 0.5)
-# plt.plot(df_ori.date, df_ori.QE, 'g', lw = 0.5)
+df_cg = pd.read_csv(path.join(dir_mod, 'SEB_psy_0_CG_ori.csv'))
+df_cg['date'] = pd.to_datetime(df_cg['date'])
+df_cg = df_cg[mask]
+# df_cg = df_cg.resample('D').mean()
 
 
-# # plt.plot(df_cg.index, df_cg.QH, 'r', lw = 0.5)
+plt.plot(df_cg.date, df_cg.QE, 'r', lw = 0.5)
+# plt.plot(df_cg.date, df_quad.QE, 'k', lw = 0.5)
+plt.plot(df_ori.date, df_ori.QE, 'g', lw = 0.5)
+
+
+plt.plot(df_cg.date, df_cg.QH, 'r', lw = 0.5)
 # plt.plot(df_quad.date, df_quad.QH, lw = 0.5)
-# plt.plot(df_ori.date, df_ori.QH, 'g', lw = 0.5)
+plt.plot(df_ori.date, df_ori.QH, 'g', lw = 0.5)
 
 
-# # plt.plot(df_cg.index, df_cg.RTS0, 'r', lw = 0.5)
+plt.plot(df_cg.date, df_cg.RTS0, 'r', lw = 0.5)
 # plt.plot(df_quad.date, df_quad.RTS0, lw = 0.5)
-# plt.plot(df_ori.date, df_ori.RTS0, 'g', lw = 0.5)
+plt.plot(df_ori.date, df_ori.RTS0, 'g', lw = 0.5)
 
 
 
