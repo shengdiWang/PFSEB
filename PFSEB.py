@@ -121,6 +121,10 @@ def psi_H(zeta1, zeta2):
     
     elif zeta1 > 0:
         
+        # def funH(x):
+        #     return 1 + 5 * x * (1 + x) / (1+ 3 * x + x**2)
+        # res = integrate.quad(funH, zeta2, zeta1)[0]
+        
         res = ((-5 + 5 ** 0.5) * cmath.log(-3 + 5 ** 0.5 - 2 * zeta1) - (5 + 5 ** 0.5) * cmath.log(3 + 5 ** 0.5 + 2 * zeta1))/2 \
               - (((-5 + 5 ** 0.5) * cmath.log(-3 + 5 ** 0.5 - 2 * zeta2) - (5 + 5 ** 0.5) * cmath.log(3 + 5 ** 0.5 + 2 * zeta2))/2)
         
@@ -128,8 +132,9 @@ def psi_H(zeta1, zeta2):
         
     else:
         res = 0
-    # return res
-    return 0
+    
+    return res
+    # return 0
 
 
 # stable
@@ -146,6 +151,11 @@ def psi_M(zeta1, zeta2):
     
     elif zeta1 > 0:
         
+        # def funM(x):
+        #     return 1 + 6.5 * x * (1 + x)**(1/3) / (1.3 + x)
+        # res = integrate.quad(funM, zeta2, zeta1)[0]
+        
+        
         res = -19.5 * (1 + zeta1) ** (1/3) - 7.5367 * atan(0.57735 - 1.72489 * (1 + zeta1) ** (1/3)) + 4.35131 * log(3+4.4814 * (1+zeta1) ** (1/3)) - 2.17566 * log(3 - 4.4814 * (1 + zeta1) ** (1/3) + 6.69433 * (1 + zeta1) ** (2/3)) \
               - (-19.5 * (1 + zeta2) ** (1/3) - 7.5367 * atan(0.57735 - 1.72489 * (1 + zeta2) ** (1/3)) + 4.35131 * log(3+4.4814 * (1+zeta2) ** (1/3)) - 2.17566 * log(3 - 4.4814 * (1 + zeta2) ** (1/3) + 6.69433 * (1 + zeta2) ** (2/3))) 
         
@@ -153,8 +163,9 @@ def psi_M(zeta1, zeta2):
         
     else:
         res = 0
-    # return res
-    return 0
+    
+    return res
+    # return 0
 
 
 # Turbulent coefficients       
@@ -225,6 +236,7 @@ def ustar(wsi, wsHeight, RZ, Lstar):
     zeta2 = RZ / Lstar
     
     return (wsi * VONK)/(math.log(wsHeight / RZ) - psi_M(zeta1, zeta2))
+
     # return (wsi * VONK)/(math.log(wsHeight / RZ) - atmospheric_correction(Lstar, wsHeight, 0, RZ)[0])
 
 
@@ -304,7 +316,6 @@ SIGMA    = 5.670374E-8
 
 class SEB(object):
 
-    
 
     def __init__(self, metaf, site = 1):
         
@@ -460,12 +471,13 @@ class SEB(object):
             
             # Monin-Obokhov length calculation
             Ustar = ustar(wsi, wsHeight, RZ, Lstar)
-            Lstar = Monin_obokhov(roAir, Ustar, TA, QH.subs({'TS':root}), QE.subs({'TS':root}))
+            Lstar = Monin_obokhov(roAir, Ustar, TA, 
+                                  QH.subs({'TS':root}), QE.subs({'TS':root}))
             
             # print(ra)            
             # print(Ustar)
             # print(Lstar)
-            print(QE.subs({'TS':root}))
+            # print(QE.subs({'TS':root}))
             # print(QH.subs({'TS':root}))
             # print(root)
             # print(TA)
@@ -477,7 +489,9 @@ class SEB(object):
             RA.append(ra)
 
 
-         df = pd.DataFrame({'date':self.dateRange2, 'QE':LE, 'QH':H, 'RTS0':RTS0, 'Lstar':L})
+         df = pd.DataFrame({'date':self.dateRange2, 
+                            'QE':LE, 'QH':H, 'RTS0':RTS0, 'Lstar':L,
+                            'RA': RA})
          
          return df
 
@@ -489,14 +503,10 @@ class SEB(object):
 
 # === SET PATH ===
 
-dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/SIM'
-dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/FOC'
-dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/VAR'
 
-
-# dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/SIM'
-# dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/FOC'
-# dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/VAR'
+dir_mod = '/Users/bincao/OneDrive/GitHub/PFSEB'
+dir_foc = '/Users/bincao/OneDrive/GitHub/PFSEB'
+dir_var = '/Users/bincao/OneDrive/GitHub/PFSEB'
 
 
 # === META FILE ===
@@ -507,10 +517,9 @@ metaf = path.join(dir_var, metaf)
 
 # === RUN SEB ===
 # metaf:meta path, site:site name
-test = SEB(metaf, site = 50136)
-df = test.SEB_RTS0()
-# df.to_csv('SEB.csv', index=False)
-
+test = SEB(metaf, site = 1)
+# df = test.SEB_RTS0()
+# df.to_csv(path.join(dir_mod, 'SEB_CH04_psy_CG_ori.csv'), index = False)
 
 
 
@@ -520,23 +529,54 @@ df = test.SEB_RTS0()
 # plt.plot(test.foc.snd[:365]*100)
 
 
+# df_quad = pd.read_csv(path.join(dir_mod, 'SEB_CHO4_psy_CG_quad.csv'))
+# df_quad['date'] = pd.to_datetime(df_quad['date'])
+# mask = df_quad['date'] >= pd.to_datetime('20000101')
+# mask *= (df_quad['date'] <= pd.to_datetime('20001231'))
+# df_quad = df_quad[mask]
+
+
+# df_ori = pd.read_csv(path.join(dir_mod, 'SEB_CHO4_psy_CG_ori.csv'))
+# df_ori['date'] = pd.to_datetime(df_ori['date'])
+# df_ori = df_ori[mask]
+
+# # df_cg = pd.read_csv(path.join(dir_mod, 'SEB_CH04_CryoGrid.csv'))
+# # df_cg['date'] = pd.date_range('20001001', '20011001', freq='3H')[:-1]
+# # df_cg = pd.DataFrame(df_cg).set_index('date')
+# # df_cg = df_cg.resample('D').mean()
+
+
+# # plt.plot(df_cg.index, df_cg.QE, 'r', lw = 0.5)
+# plt.plot(df_quad.date, df_quad.QE, 'k', lw = 0.5)
+# plt.plot(df_ori.date, df_ori.QE, 'g', lw = 0.5)
+
+
+# # plt.plot(df_cg.index, df_cg.QH, 'r', lw = 0.5)
+# plt.plot(df_quad.date, df_quad.QH, lw = 0.5)
+# plt.plot(df_ori.date, df_ori.QH, 'g', lw = 0.5)
+
+
+# # plt.plot(df_cg.index, df_cg.RTS0, 'r', lw = 0.5)
+# plt.plot(df_quad.date, df_quad.RTS0, lw = 0.5)
+# plt.plot(df_ori.date, df_ori.RTS0, 'g', lw = 0.5)
 
 
 
 
+
+test.foc['date'] = pd.to_datetime(test.foc['date']) 
+# mask = test.foc['date'] >= pd.to_datetime('20000101')
+# mask *= (test.foc['date'] <= pd.to_datetime('20001231'))
+# test.foc = test.foc[mask]
+
+
+# plt.plot(df_ori.date, df_ori.RTS0, 'g', lw = 0.5)
+# plt.plot(test.foc.date, test.foc.satFinal, 'r', lw = 0.5)
 
 
 '''
-
-df = pd.read_csv('/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/SEB/SEB.csv')
-df['date'] = pd.to_datetime(df['date'])
-df_c = pd.read_csv('/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/SEB/SEB_CryoGrid.csv')
-df_c['date'] = pd.date_range('20001001', '20011001', freq='3H')[:-1]
 df_c = pd.DataFrame(df_c).set_index('date')
 df_c = df_c.resample('D').mean()
-
-
-
 
 
 
