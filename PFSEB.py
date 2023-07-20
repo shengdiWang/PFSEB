@@ -102,7 +102,7 @@ def sensible_heat(roAir, CAir, ra, TA, TS):
 
 def latent_heat(roAir, latSub, ra, EA, ES0, PA):
     
-    QE = - roAir * latSub / (ra + 100) * (0.622 * (EA - ES0) / PA)
+    QE = - roAir * latSub / (ra + 50) * (0.622 * (EA - ES0) / PA)
     
     return QE
 
@@ -124,8 +124,7 @@ def psi_H(zeta1, zeta2):
         res = ((-5 + 5 ** 0.5) * cmath.log(-3 + 5 ** 0.5 - 2 * zeta1) - (5 + 5 ** 0.5) * cmath.log(3 + 5 ** 0.5 + 2 * zeta1))/2 \
               - (((-5 + 5 ** 0.5) * cmath.log(-3 + 5 ** 0.5 - 2 * zeta2) - (5 + 5 ** 0.5) * cmath.log(3 + 5 ** 0.5 + 2 * zeta2))/2)
         
-        # res = 0.95 * zeta1 + 3.9 * zeta1 ** 2 - (0.95 * zeta2 + 3.9 * zeta2 ** 2)
-        res = 0.05 * math.log(zeta1) - 7.8 * zeta1 - (0.05 * math.log(zeta2) - 7.8 * zeta2)
+        # res = 0.05 * math.log(zeta1) - 7.8 * zeta1 - (0.05 * math.log(zeta2) - 7.8 * zeta2)
         
     else:
         res = 0
@@ -150,8 +149,7 @@ def psi_M(zeta1, zeta2):
         res = -19.5 * (1 + zeta1) ** (1/3) - 7.5367 * atan(0.57735 - 1.72489 * (1 + zeta1) ** (1/3)) + 4.35131 * log(3+4.4814 * (1+zeta1) ** (1/3)) - 2.17566 * log(3 - 4.4814 * (1 + zeta1) ** (1/3) + 6.69433 * (1 + zeta1) ** (2/3)) \
               - (-19.5 * (1 + zeta2) ** (1/3) - 7.5367 * atan(0.57735 - 1.72489 * (1 + zeta2) ** (1/3)) + 4.35131 * log(3+4.4814 * (1+zeta2) ** (1/3)) - 2.17566 * log(3 - 4.4814 * (1 + zeta2) ** (1/3) + 6.69433 * (1 + zeta2) ** (2/3))) 
         
-        # res = zeta1 + 3 * zeta1 ** 2 - (zeta2 + 3 * zeta2 ** 2)
-        res = - 6 * zeta1 + 6 * zeta2
+        # res = - 6 * zeta1 + 6 * zeta2
         
     else:
         res = 0
@@ -491,9 +489,9 @@ class SEB(object):
 
 # === SET PATH ===
 
-# dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/SIM'
-# dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/FOC'
-# dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/VAR'
+dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/SIM'
+dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/FOC'
+dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/VAR'
 
 
 dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/SIM'
@@ -509,21 +507,8 @@ metaf = path.join(dir_var, metaf)
 
 # === RUN SEB ===
 # metaf:meta path, site:site name
-df = SEB(metaf, site = 1).SEB_RTS0()
+# df = SEB(metaf, site = 3).SEB_RTS0()
 # df.to_csv('SEB.csv', index=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
