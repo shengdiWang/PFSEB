@@ -128,8 +128,8 @@ def psi_H(zeta1, zeta2):
         
     else:
         res = 0
-    return res
-    # return 0
+    # return res
+    return 0
 
 
 # stable
@@ -153,8 +153,8 @@ def psi_M(zeta1, zeta2):
         
     else:
         res = 0
-    return res
-    # return 0
+    # return res
+    return 0
 
 
 # Turbulent coefficients       
@@ -494,9 +494,9 @@ dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/FO
 dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/CMA/VAR'
 
 
-dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/SIM'
-dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/FOC'
-dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/VAR'
+# dir_mod = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/SIM'
+# dir_foc = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/FOC'
+# dir_var = '/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/JRA/VAR'
 
 
 # === META FILE ===
@@ -507,8 +507,109 @@ metaf = path.join(dir_var, metaf)
 
 # === RUN SEB ===
 # metaf:meta path, site:site name
-# df = SEB(metaf, site = 3).SEB_RTS0()
+test = SEB(metaf, site = 50136)
+df = test.SEB_RTS0()
 # df.to_csv('SEB.csv', index=False)
+
+
+
+
+# plt.plot(df.QE[:365])
+# plt.plot(test.foc.satFinal[:365])
+
+# plt.plot(test.foc.snd[:365]*100)
+
+
+
+
+
+
+
+
+'''
+
+df = pd.read_csv('/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/SEB/SEB.csv')
+df['date'] = pd.to_datetime(df['date'])
+df_c = pd.read_csv('/Users/shengdiwang/Library/CloudStorage/OneDrive-个人/桌面/SEB/SEB_CryoGrid.csv')
+df_c['date'] = pd.date_range('20001001', '20011001', freq='3H')[:-1]
+df_c = pd.DataFrame(df_c).set_index('date')
+df_c = df_c.resample('D').mean()
+
+
+
+
+
+
+cm = 1/2.54
+fig = plt.figure(figsize=(10*cm, 15*cm))
+font = {'family': 'Arial',
+        'size': 4}
+import matplotlib
+matplotlib.rc('font', **font)
+plt.rcParams['xtick.direction'] = 'in'
+plt.rcParams['ytick.direction'] = 'in'
+
+ax1 = fig.add_subplot(3,1,1)
+plt.plot(df.date, df.QE, label='PFSEB')
+# plt.plot(df.date, df.satFinal, color='r', label='Ta')
+plt.plot(df_c.index, df_c.QE, label='CryoGrid')
+plt.xlim(pd.to_datetime('2000-01-01'),pd.to_datetime('2001-12-31'))
+plt.ylabel('QE')
+ax = plt.gca()
+ax.spines['bottom'].set_linewidth(0.5)
+ax.spines['left'].set_linewidth(0.5)
+ax.spines['top'].set_linewidth(0.5)
+ax.spines['right'].set_linewidth(0.5)
+ax.tick_params(width=0.5,length=2)
+plt.legend(loc=2)
+
+ax2 = fig.add_subplot(3,1,2)
+plt.plot(df.date, df.QH, label='PFSEB')
+# plt.plot(df.date, df.satFinal, color='r', label='Ta')
+plt.plot(df_c.index, df_c.QH, label='CryoGrid')
+plt.xlim(pd.to_datetime('2000-01-01'),pd.to_datetime('2001-12-31'))
+plt.ylabel('QH')
+ax = plt.gca()
+ax.spines['bottom'].set_linewidth(0.5)
+ax.spines['left'].set_linewidth(0.5)
+ax.spines['top'].set_linewidth(0.5)
+ax.spines['right'].set_linewidth(0.5)
+ax.tick_params(width=0.5,length=2)
+plt.legend(loc=2)
+
+ax3 = fig.add_subplot(3,1,3)
+plt.plot(df.date, df.RTS0, label='PFSEB')
+plt.plot(df_c.index, df_c.RTS0, label='CryoGrid')
+plt.xlim(pd.to_datetime('2000-01-01'),pd.to_datetime('2001-12-31'))
+
+plt.ylabel('RTS0')
+ax = plt.gca()
+ax.spines['bottom'].set_linewidth(0.5)
+ax.spines['left'].set_linewidth(0.5)
+ax.spines['top'].set_linewidth(0.5)
+ax.spines['right'].set_linewidth(0.5)
+ax.tick_params(width=0.5,length=2)
+plt.legend(loc=2)
+
+
+
+
+
+plt.savefig('PFSEB.png', dpi = 400, bbox_inches='tight')
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
