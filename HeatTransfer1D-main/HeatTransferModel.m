@@ -26,12 +26,12 @@ scSites = meta.site;
 % 5-layer snow, 16 layers for 0-1 m, 190 layers for 1-20 m [0.1 m interval]
 % soil discretization for 0-1 m
 soil1m = [0, 3, 7, 11, 15, 22, 29, 35, 44, 50, 58, 66, 75, 84, 93, 100];
-soil1m = soil1m/100; % in m
+soil1m = soil1m / 100; % in m
 soilDepth = 10;  % total soil depth
 soilTck = 0.1; % thickness [m] for deep soil (> 1 m)
 
 snowN = 5;   % maximum snow layer
-NODE = snowN + length(soil1m) + (soilDepth - 1)/soilTck;
+NODE  = snowN + length(soil1m) + (soilDepth - 1) / soilTck;
 
 SLTck1 = 2; % soil layer 1 thickness
 SLTck2 = 8;
@@ -60,12 +60,10 @@ for I = snowN + 1:NODE-1
     
 end
 
-
 % ---- model run ----
 
 % spin up
-spinTime   = 10;  % spin-up times
-
+spinTime = 20;  % spin-up times
 
 %% Call constants to calculate thermal parameters
 
@@ -75,7 +73,7 @@ QQ      = 0; % the lower boundary condition
 
 %% Assign all parameters needed in SURFACE ENERGY BALANCE METHOD
 % AIR
-roAir = 1.225;  % air density [kg m-3]
+% roAir = 1.225;  % air density [kg m-3]
 CAir  = 1003.5;  % air thermal capacity [J m-3 C-1]
 
 % ICE
@@ -88,13 +86,13 @@ GRAVIT   = 9.807;   % gravitational acceleration
 VONK     = 0.4;     % Von Karman's constant
 TF       = 273.15;  % unit C to K
 latSub   = 2.5E6;   % latent heat of water [J kg-1]
-wsHeight = 2.0;    % REFERENCE HEIGHT for wind speed measure
+% latSub   = 2.838E6; % latent heat of water [J kg-1]
+wsHeight = 10.0;     % REFERENCE HEIGHT for wind speed measure
 albedoG  = 0.2;     % snow-free albedo
 
 %% ---- Energy balance ----
 kSL1 = 2.92;
 kSL2 = 2.92;      % silt thermal conductivity
-
 
 for si = 1:length(scSites)
 %for si = 1
@@ -112,11 +110,11 @@ for si = 1:length(scSites)
     % simulation period
     begYr = meta.beg(sitei);
     begDate1   = datetime(begYr, 1, 1);    % start date for run
-    endDate1   = datetime(begYr+10, 12, 31); % end date for run
+    endDate1   = datetime(begYr+5, 12, 31); % end date for run
     dateRange1 = begDate1:endDate1;
     
     begDate2   = datetime(begYr, 1, 1); % start date for run
-    endDate2   = datetime(2022, 12, 31); % end date for run
+    endDate2   = datetime(2021, 12, 31); % end date for run
     dateRange2 = begDate2:endDate2;
 
     %% ===== ENSEMBLE FORECASTING =============================================
@@ -177,8 +175,9 @@ for si = 1:length(scSites)
 
     SND(SND < 0.01) = 0;
     snowRo(SND > 0) = 200;
-    emi(SND > 0)  = 0.99;
-    emi(SND == 0) = 0.97;
+    snowRo(SND == 0) = 0;
+    emi(SND > 0)  = 0.98;
+    emi(SND == 0) = 0.92;
     rz(SND > 0)   = 0.005; % 0.005
     rz(SND == 0)  = 0.015; % 0.015
     
@@ -242,7 +241,6 @@ for si = 1:length(scSites)
                         LMN       = 4;
                         XYN(4)    = -SNOWH;
                         XYN(5)    = -SNOWH / 2.0;
-                        
                         RTT(4)    = AIRT(dayi);
                         RTT(5)    = AIRT(dayi);
                         DX(LMN)   = SNOWH / 2.0;
@@ -266,7 +264,6 @@ for si = 1:length(scSites)
                         XYN(3)    = -SNOWH * 3.0 / 4.0;
                         XYN(4)    = -SNOWH * 2.0 / 4.0;
                         XYN(5)    = -SNOWH / 4.0;
-
                         RTT(2)    = AIRT(dayi);
                         RTT(3)    = AIRT(dayi);
                         RTT(4)    = AIRT(dayi);
@@ -309,8 +306,8 @@ for si = 1:length(scSites)
                     PA     = PRE(dayi);
                     roAir  = rho_a(TA, PA);
                     EA     = atmosphericVaporPressure(tDew);
-                    QLI    = longWaveIn(EA, TA); % TRin(dayi); 
-                    NCONTRALER = 0;
+                    QLI    = TRin(dayi); % longWaveIn(EA, TA);
+                    NCONTRALER = 1;
                     
                     %%
                     REEE = 1;
@@ -424,7 +421,7 @@ for si = 1:length(scSites)
                         
                         RTS0 = TF;
                         QH   = roAir * CAir * DH * XI * (TA - RTS0);
-                        ES0  = atmosphericVaporPressure(RTS0);
+                        % ES0  = atmosphericVaporPressure(RTS0);
                         QE   = roAir * latSub * DE * XI * (0.622 * (EA-ES0)/ PA);
                         Qle  = longWaveOut(emi(dayi), RTS0);
                         QC   = - (RTS0 - XRTT7) / RERKK;
@@ -680,7 +677,7 @@ for si = 1:length(scSites)
                 PA     = PRE(dayi);
                 roAir  = rho_a(TA, PA);
                 EA     = atmosphericVaporPressure(tDew);
-                QLI    = longWaveIn(EA, TA); % TRin(dayi); 
+                QLI    = TRin(dayi); % longWaveIn(EA, TA); 
                 NCONTRALER = 1;
                 
                 %%
@@ -800,7 +797,7 @@ for si = 1:length(scSites)
                     
                     RTS0 = TF;
                     QH   = roAir * CAir * DH * XI * (TA - RTS0);
-                    ES0  = atmosphericVaporPressure(RTS0);
+                    % ES0  = atmosphericVaporPressure(RTS0);
                     QE   = roAir * latSub * DE * XI * (0.622 * (EA-ES0) / PA);
                     Qle  = longWaveOut(emi(dayi), RTS0);
                     QC   = -(RTS0 - XRTT7) / RERKK;
@@ -995,7 +992,7 @@ for si = 1:length(scSites)
             fmt = '%s %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f\n';
             
             begDate3   = datetime(begYr, 1, 1);
-            endDate3   = datetime(2022, 12, 31);
+            endDate3   = datetime(2021, 12, 31);
             dateRange3 = begDate3:days(1):endDate3;
 
             
