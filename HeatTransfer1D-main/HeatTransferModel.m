@@ -114,7 +114,7 @@ for si = 1:length(scSites)
     dateRange1 = begDate1:endDate1;
     
     begDate2   = datetime(begYr, 1, 1); % start date for run
-    endDate2   = datetime(2021, 12, 31); % end date for run
+    endDate2   = datetime(2022, 12, 31); % end date for run
     dateRange2 = begDate2:endDate2;
 
     %% ===== ENSEMBLE FORECASTING =============================================
@@ -179,7 +179,7 @@ for si = 1:length(scSites)
     emi(SND > 0)  = 0.98;
     emi(SND == 0) = 0.92;
     rz(SND > 0)   = 0.005; % 0.005
-    rz(SND == 0)  = 0.015; % 0.015
+    rz(SND == 0)  = 0.01; % 0.015
     
     EES     = 0.0001; % 0.0001
     TDAYS   = 3600.0 * 24.0; % 1 day in second
@@ -992,7 +992,7 @@ for si = 1:length(scSites)
             fmt = '%s %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f %6.2f\n';
             
             begDate3   = datetime(begYr, 1, 1);
-            endDate3   = datetime(2021, 12, 31);
+            endDate3   = datetime(2022, 12, 31);
             dateRange3 = begDate3:days(1):endDate3;
 
             
