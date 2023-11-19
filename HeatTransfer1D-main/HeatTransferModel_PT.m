@@ -386,8 +386,8 @@ for si = 1:length(scSites)
                             gama  = 0.00163 * PA / 1E3 / (1E3 * (2500.8 - 2.36 * (TA - 273.15)) / 1E6);
                             % QE    = - (1.28 * delta * (AQSI + QLI + Qle - QC) / (delta + gama));
                             ra    = log(wsHeight / rz(dayi)) * log(wsHeight / rz(dayi)) / (VONK^2 * wsi);
-                            % QE    = - ((delta * (AQSI + QLI + Qle - QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
-                            QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
+                            % QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
+                            QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir / 1E6 * (EAS - EA) / 1E3 / ra / 86400 * 1E6)/ (delta + gama));
                         else
                             QE    = roAir * latSub * DE * XI * (0.622 * (EA - ES0) / PA);
                         end
@@ -766,8 +766,8 @@ for si = 1:length(scSites)
                         gama  = 0.00163 * PA / 1E3 / (1E3 * (2500.8 - 2.36 * (TA - 273.15)) / 1E6);
                         % QE    = - (1.28 * delta * (AQSI + QLI + Qle - QC) / (delta + gama));
                         ra    = log(wsHeight / rz(dayi)) * log(wsHeight / rz(dayi)) / (VONK^2 * wsi);
-                        % QE    = - ((delta * (AQSI + QLI + Qle - QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
-                        QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
+                        % QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir * (EAS - EA) / ra / 1E9 * 86400)/ (delta + gama));
+                        QE    = - ((delta * (AQSI + QLI + Qle + QC) + roAir * CAir / 1E6 * (EAS - EA) / 1E3 / ra / 86400 * 1E6)/ (delta + gama));
                     else
                         QE    = roAir * latSub * DE * XI * (0.622 * (EA - ES0) / PA);
                     end
