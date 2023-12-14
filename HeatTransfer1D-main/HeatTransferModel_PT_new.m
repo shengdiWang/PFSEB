@@ -300,8 +300,8 @@ for si = 1:length(scSites)
                     %
                     %% VARIABLES FOR ESTIMATING THE HEAT CONDUCTED
                     % THROUGH THE SOIL, QC. in SURFACE ENERGY BALANCE MODEL
-                    XRTT7   = RTT(7) + TF; %
-                    XXYN7   = XYN(7);   % depth of node 7
+                    XRTT7   = RTT(10) + TF; %
+                    XXYN7   = XYN(10);   % depth of node 7
                     RKKPEAT = RKKK(7);  % thermal conductivity of node 7
                     %%
                     TA     = TF + AIRT(dayi);
@@ -689,8 +689,8 @@ for si = 1:length(scSites)
                 %
                 %% VARIABLES FOR ESTIMATING THE HEAT CONDUCTED
                 % THROUGH THE SOIL, QC. in SURFACE ENERGY BALANCE MODEL
-                XRTT7   = RTT(7) + TF; %
-                XXYN7   = XYN(7);  % depth of node 7
+                XRTT7   = RTT(10) + TF; %
+                XXYN7   = XYN(10);  % depth of node 7
                 RKKPEAT = RKKK(7); % thermal conductivity of node 7
                 %%
                 TA     = TF + AIRT(dayi);
